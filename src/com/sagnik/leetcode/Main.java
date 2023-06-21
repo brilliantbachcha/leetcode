@@ -18,7 +18,7 @@ public class Main {
         System.out.print(y + ",");
         System.out.println();*/
         /*s = sc.nextLine();
-        System.out.println("Enter the Rows");
+        System.out.println("Enter the Rows"); 
         int x = sc.nextInt();
         System.out.println(problem.convert(s,x));*/
 

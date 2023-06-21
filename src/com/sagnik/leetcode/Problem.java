@@ -819,6 +819,7 @@ Notice that the solution set must not contain duplicate triplets.
         int[]sortedNums = Arrays.stream(nums).sorted().toArray();
         for(int index=0; index < sortedNums.length-1; index++){
             int firstNum = sortedNums[index];
+            //Managing testcase of 3k 0(zeros)
             if(!returnList.isEmpty() && returnList.size() > 0
                 && !returnList.get(returnList.size()-1).isEmpty() && returnList.get(returnList.size()-1).get(0)!= null){
                 lastListStartVal = returnList.get(returnList.size()-1).get(0);
