@@ -28,8 +28,9 @@ public class Main {
         String[] chk = x.split(",");
         System.out.println(problem.findSubstring(s, chk));*/
 
+        problem.test_threeSum();
         //problem.test_maxLength();
-        problem.testLetterCombinations();
+        //problem.testLetterCombinations();
 
     }
 }
