@@ -1078,4 +1078,132 @@ Output: ["a","b","c"]
         System.out.println(String.join(" , ", ltrComboList));
     }
 
+    /*
+    You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
+
+Merge nums1 and nums2 into a single array sorted in non-decreasing order.
+
+The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
+
+
+
+Example 1:
+
+Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: [1,2,2,3,5,6]
+Explanation: The arrays we are merging are [1,2,3] and [2,5,6].
+The result of the merge is [1,2,2,3,5,6] with the underlined elements coming from nums1.
+Example 2:
+
+Input: nums1 = [1], m = 1, nums2 = [], n = 0
+Output: [1]
+Explanation: The arrays we are merging are [1] and [].
+The result of the merge is [1].
+Example 3:
+
+Input: nums1 = [0], m = 0, nums2 = [1], n = 1
+Output: [1]
+Explanation: The arrays we are merging are [] and [1].
+The result of the merge is [1].
+Note that because m = 0, there are no elements in nums1. The 0 is only there to ensure the merge result can fit in nums1.
+     */
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+
+        //Validations
+        ArrayList<Integer>resultSet = new ArrayList<Integer>(m+n);
+        if(m < 0 || n <0 || m > 200 || n > 200) {
+            return ;
+        }
+        if(nums1.length != (m+n)){
+            return ;
+        }
+        int num1Pos = m-1;
+        int num2Pos = n - 1;
+        int currPos = m+n -1;
+
+        while(currPos >=0){
+            if(num2Pos < 0 && num1Pos >= 0){
+                //Data left in nums1
+                currPos = 0;
+            }
+            else if(num1Pos < 0){
+                nums1[currPos] = nums2[num2Pos];
+                num2Pos--;
+            }
+            else if(nums1[num1Pos] < nums2[num2Pos]){
+                nums1[currPos] = nums2[num2Pos];
+                num2Pos--;
+            }
+            else{
+                nums1[currPos] = nums1[num1Pos];
+                num1Pos--;
+            }
+            currPos--;
+        }
+
+    }
+
+    public void testArrayMerge(){
+        int[] nums1 = {};
+        int[] nums2 = {2,5,10};
+        merge(nums1, 0, nums2, 3);
+
+        Arrays.stream(nums1).forEach(System.out::println);
+    }
+
+    /*
+    Given an array nums of size n, return the majority element.
+
+The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+
+
+Example 1:
+
+Input: nums = [3,2,3]
+Output: 3
+Example 2:
+
+Input: nums = [2,2,1,1,1,2,2]
+Output: 2
+     */
+    public int majorityElement(int[] nums) {
+        int majorityElement = nums[0];
+        HashMap<Integer, Integer>dataCountMap = new HashMap<Integer, Integer>();
+        int maxCount = 1;
+        for(int i = 0;i < nums.length;i++){
+            Integer number = nums[i];
+            if(dataCountMap.get(number) != null){
+                int count = dataCountMap.get(number);
+                dataCountMap.put(number,++count);
+                if(count > dataCountMap.get(majorityElement)){
+                    majorityElement = number;
+                    maxCount = count;
+                }
+            }
+            else {
+                dataCountMap.put(number, 1);
+            }
+        }
+        return majorityElement;
+    }
+
+    //Alternate solution of space complexity O(1)
+    public int majorityElement_alt(int[] nums) {
+        //As it is expected that number will be always present & count is > length/2,
+        // then element @length/2 is the majority element
+        Arrays.sort(nums);
+        return nums[nums.length / 2];
+
+    }
+
+    public void test_majorityElement(){
+        int[] num = {6,5,5};
+        int element = majorityElement(num);
+        System.out.println("Expected 5. Received: "+ element);
+        int[] num2 = {2,2,1,1,1,2,2};
+        element = majorityElement_alt(num2);
+        System.out.println("Expected 2. Received: "+ element);
+    }
+
 }

@@ -29,7 +29,9 @@ public class Main {
         System.out.println(problem.findSubstring(s, chk));*/
 
         //problem.test_maxLength();
-        problem.testLetterCombinations();
+        //problem.testLetterCombinations();
+        //problem.testArrayMerge();
+        problem.test_majorityElement();
 
     }
 }
