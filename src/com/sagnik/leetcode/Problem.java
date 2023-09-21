@@ -1206,4 +1206,71 @@ Output: 2
         System.out.println("Expected 2. Received: "+ element);
     }
 
+    /***22
+     Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+     Example 1:
+     Input: n = 3
+     Output: ["((()))","(()())","(())()","()(())","()()()"]
+
+     Example 2:
+     Input: n = 1
+     Output: ["()"]
+
+     Constraints:   1 <= n <= 8
+     */
+    public List<String> generateParenthesis(int n) {
+        /* Initial Thought process ...
+        List<String>retVal = new ArrayList<>();
+        Set<String>genStrings = new HashSet<>();
+        retVal.add("()");
+        for(int i = 1; i<n; i++){
+            for (String str: retVal) {
+                String newStr;
+                //Add begin
+                newStr = "()"+str;
+                genStrings.add(newStr);
+                //Add End
+                newStr = str + "()";
+                genStrings.add(newStr);
+                //Add over
+                newStr = "("+str+")";
+                genStrings.add(newStr);
+            }
+            retVal.clear();
+            retVal.addAll(genStrings);
+            genStrings.clear();
+        }
+        .....End of initial though process
+         */
+        List<String>retVal = new ArrayList<>();
+        int openParenthesisCounter = 0;
+        int closeParenthesisCounter = 0;
+        String currentPopulatedString = "";
+
+        generateValidParenthesis(retVal, openParenthesisCounter, closeParenthesisCounter, n, currentPopulatedString);
+
+        return retVal;
+    }
+
+    private void generateValidParenthesis(List<String> retVal, int openParenthesisCounter, int closeParenthesisCounter, int n, String currentPopulatedString) {
+        //Exit Condition
+        if(currentPopulatedString.length() == n * 2){
+            //Expected number of valid pairs are generated
+            retVal.add(currentPopulatedString);
+        }
+        if(openParenthesisCounter < n) { //We still can add open parenthesis
+            generateValidParenthesis(retVal, openParenthesisCounter + 1, closeParenthesisCounter, n, currentPopulatedString+ "(");
+        }
+        if(closeParenthesisCounter < openParenthesisCounter){
+            generateValidParenthesis(retVal, openParenthesisCounter , closeParenthesisCounter + 1, n, currentPopulatedString+ ")");
+        }
+    }
+
+    void test_generateParenthesis(int n){
+        List<String> retVal = generateParenthesis(n);
+        retVal.stream().forEach(x-> System.out.print(x + "  "));
+        System.out.println();
+    }
+
 }
