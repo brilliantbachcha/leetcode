@@ -1,5 +1,7 @@
 package com.sagnik.leetcode;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         Problem problem = new Problem();
@@ -31,7 +33,11 @@ public class Main {
         //problem.test_maxLength();
         //problem.testLetterCombinations();
         //problem.testArrayMerge();
-        problem.test_majorityElement();
+        //problem.test_majorityElement();
+        System.out.println("Enter a number between 1 to 8:");
+        Scanner sc = new Scanner(System.in);
+        int x = sc.nextInt();
+        problem.test_generateParenthesis(x);
 
     }
 }
