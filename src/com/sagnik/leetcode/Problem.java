@@ -1,11 +1,25 @@
 package com.sagnik.leetcode;
 
+import java.math.BigInteger;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Problem {
-
     private String retStr = "";
+
+    private void printIntegerList(List<Integer> elemList){
+        int count = 0;
+        for (Integer i : elemList){
+            if(count < elemList.size()-1)
+                System.out.print(i + ", ");
+            else
+                System.out.print(i);
+
+            count++;
+        }
+        System.out.println();
+    }
 
     /*Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.*/
     public boolean braceOrder(String s)
@@ -1306,6 +1320,473 @@ Output: 2
         List<String> retVal = generateParenthesis(n);
         retVal.stream().forEach(x-> System.out.print(x + "  "));
         System.out.println();
+    }
+
+    /* #2038: Remove Colored Pieces if Both Neighbors are the Same Color
+    There are n pieces arranged in a line, and each piece is colored either by 'A' or by 'B'. You are given a string colors of length n where colors[i] is the color of the ith piece.
+
+Alice and Bob are playing a game where they take alternating turns removing pieces from the line. In this game, Alice moves first.
+
+Alice is only allowed to remove a piece colored 'A' if both its neighbors are also colored 'A'. She is not allowed to remove pieces that are colored 'B'.
+Bob is only allowed to remove a piece colored 'B' if both its neighbors are also colored 'B'. He is not allowed to remove pieces that are colored 'A'.
+Alice and Bob cannot remove pieces from the edge of the line.
+If a player cannot make a move on their turn, that player loses and the other player wins.
+Assuming Alice and Bob play optimally, return true if Alice wins, or return false if Bob wins.
+
+
+
+Example 1:
+
+Input: colors = "AAABABB"
+Output: true
+Explanation:
+AAABABB -> AABABB
+Alice moves first.
+She removes the second 'A' from the left since that is the only 'A' whose neighbors are both 'A'.
+
+Now it's Bob's turn.
+Bob cannot make a move on his turn since there are no 'B's whose neighbors are both 'B'.
+Thus, Alice wins, so return true.
+Example 2:
+
+Input: colors = "AA"
+Output: false
+Explanation:
+Alice has her turn first.
+There are only two 'A's and both are on the edge of the line, so she cannot move on her turn.
+Thus, Bob wins, so return false.
+Example 3:
+
+Input: colors = "ABBBBBBBAAA"
+Output: false
+Explanation:
+ABBBBBBBAAA -> ABBBBBBBAA
+Alice moves first.
+Her only option is to remove the second to last 'A' from the right.
+
+ABBBBBBBAA -> ABBBBBBAA
+Next is Bob's turn.
+He has many options for which 'B' piece to remove. He can pick any.
+
+On Alice's second turn, she has no more pieces that she can remove.
+Thus, Bob wins, so return false.
+
+
+Constraints:
+
+1 <= colors.length <= 105
+colors consists of only the letters 'A' and 'B'
+     */
+    public boolean winnerOfGame(String colors) {
+
+        boolean retVal = false;
+        boolean isWinnerDetermined = false;
+
+        if(colors.length() < 3){
+            //Alice can't make a move
+            isWinnerDetermined = true;
+        }
+
+        StringBuilder inputString = new StringBuilder(colors);
+
+        while(!isWinnerDetermined){
+            if(inputString.indexOf("AAA") > -1){
+                //Alice can make a move
+                //Index of middle A
+                int index = inputString.indexOf("AAA") + 1;
+                inputString.deleteCharAt(index);
+            }
+            else{
+                //Alice can't make a move , Bob is winner
+                isWinnerDetermined = true;
+                break;
+            }
+
+            if(inputString.indexOf("BBB") > -1){
+                //Bob can make a move
+                //Index of middle B
+                int index = inputString.indexOf("BBB") + 1;
+                inputString.deleteCharAt(index);
+            }
+            else{
+                //Bob can't make a move , Alice is winner
+                isWinnerDetermined = true;
+                retVal = true;
+            }
+        }
+
+        return retVal;
+    }
+
+    void test_winnerOfGame(){
+        String ipStr = "AAAAABBB";
+
+        String opStr = winnerOfGameV2(ipStr) ? "Alice is winner" : "Bob is winner";
+        System.out.println(opStr);
+    }
+
+    public boolean winnerOfGameV2(String colors){
+        if(colors.length() < 3){
+            //Alice can't make a move
+            return false;
+        }
+
+        long aliceMoveCount = countOfSubString(colors, "AAA");
+        long bobMoveCount = countOfSubString(colors, "BBB");
+
+        return (aliceMoveCount > bobMoveCount) ? true : false;
+
+    }
+    private long countOfSubString(String source, String pattern){
+        long count  = 0;
+        int index = -1;
+        while(index != 0){
+            index = source.indexOf(pattern, index) + 1;
+            if(index != 0)
+                count ++;
+        }
+        return count;
+    }
+
+    /* #1512
+    Given an array of integers nums, return the number of good pairs.
+A pair (i, j) is called good if nums[i] == nums[j] and i < j.
+Example 1:
+Input: nums = [1,2,3,1,1,3]
+Output: 4
+Explanation: There are 4 good pairs (0,3), (0,4), (3,4), (2,5) 0-indexed.
+
+Example 2:
+Input: nums = [1,1,1,1]
+Output: 6
+Explanation: Each pair in the array are good.
+Example 3:
+Input: nums = [1,2,3]
+Output: 0
+
+Constraints:
+1 <= nums.length <= 100
+1 <= nums[i] <= 100
+     */
+
+    public int numIdenticalPairs(int[] nums) {
+        int retVal = 0;
+        Map<Integer, Integer>numMap = new HashMap<>();
+        if(nums.length < 2) return retVal;
+        boolean isPairPresent = false;
+        for(int i : nums){
+            Integer count = numMap.get(i) ;
+            if(count== null){
+                numMap.put(i, 0);
+            }
+            else{
+                isPairPresent = true;
+                numMap.put(i, ++count);
+            }
+        }
+        if(isPairPresent){
+           retVal = numMap.values().stream().filter(a -> a > 0).map(n-> (n * (n+1))/2).mapToInt(Integer::intValue).sum();
+            //for(Integer x : numMap.values())
+        }
+
+        return retVal;
+
+        /*Alternate Solution:
+        int retVal = 0, cnt[] = new int[101];
+        for (int a: nums) {
+            retVal += cnt[a]++;
+        }
+        return retVal;
+         */
+    }
+
+    void test_numIdenticalPairs(){
+        int[] arr1 = new int[]{1,2,3,1,1,3};
+        int[] arr2 = new int[]{1,2,3};
+        int[] arr3 = new int[]{1,1,1,1};
+        int[] arr4 = new int[]{1,1,1,1,1};
+        int[] arr5 = new int[]{};
+
+        System.out.println("Expected : 4, Actual: "+ numIdenticalPairs(arr1));
+        System.out.println("Expected : 0, Actual: "+ numIdenticalPairs(arr2));
+        System.out.println("Expected : 6, Actual: "+ numIdenticalPairs(arr3));
+        System.out.println("Expected : 10, Actual: "+ numIdenticalPairs(arr4));
+        System.out.println("Expected : 0, Actual: "+ numIdenticalPairs(arr5));
+
+    }
+
+    /* #29
+Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.
+The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.
+Return the quotient after dividing dividend by divisor.
+Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: [−231, 231 − 1]. For this problem, if the quotient is strictly greater than 231 - 1, then return 231 - 1, and if the quotient is strictly less than -231, then return -231.
+
+Example 1:
+Input: dividend = 10, divisor = 3
+Output: 3
+Explanation: 10/3 = 3.33333.. which is truncated to 3.
+Example 2:
+
+Input: dividend = 7, divisor = -3
+Output: -2
+Explanation: 7/-3 = -2.33333.. which is truncated to -2.
+
+Constraints:
+-231 <= dividend, divisor <= 231 - 1
+divisor != 0
+     */
+    public int divide(int dividend, int divisor) {
+
+        int result = 0;
+        //TODO: Complete this code by bitwise operator
+
+        return result;
+    }
+
+    public void test_divide(){
+        int dividend = 0;
+        int divisor = 0;
+
+        System.out.println("Value Expected: 16, Actual: " + divide(112,7));
+        System.out.println("Value Expected: 2, Actual: " + divide(18,7));
+        System.out.println("Value Expected: 12, Actual: " + divide(112,9));
+        System.out.println("Value Expected: 10, Actual: " + divide(234,23));
+    }
+
+    /*#229
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
+
+Example 1:
+Input: nums = [3,2,3]
+Output: [3]
+
+Example 2:
+Input: nums = [1]
+Output: [1]
+
+Example 3:
+Input: nums = [1,2]
+Output: [1,2]
+
+Constraints:
+1 <= nums.length <= 5 * 104
+-109 <= nums[i] <= 109
+
+Follow up: Could you solve the problem in linear time and in O(1) space?
+     */
+    public List<Integer> majorityElement_229(int[] nums) {
+        int minValue = 0;
+        int oldElem = -110;
+        List<Integer>majorityElementList = new ArrayList<>();
+        int count = 0;
+        minValue = (nums.length > 2) ? (nums.length/3) +1 : 1;
+
+        Arrays.sort(nums);
+
+        for(int x : nums){
+            if(oldElem != x) count =0;
+            if(majorityElementList.isEmpty() || (majorityElementList.size() > 0 && majorityElementList.get(majorityElementList.size()-1) != x)) {
+                count++;
+            }
+            if(count == minValue){
+                majorityElementList.add(x);
+                count = 0;
+            }
+            oldElem = x;
+        }
+        return majorityElementList;
+    }
+
+    public void test_majorityElement_229()
+    {
+        List<Integer>elementList = null;
+        int[]nums = null;
+
+        nums = new int[]{1,3,2,3,1,1,3};
+        elementList = majorityElement_229(nums);
+        printIntegerList(elementList);
+
+        nums = new int[]{3,2,3};
+        elementList = majorityElement_229(nums);
+        printIntegerList(elementList);
+
+        nums = new int[]{1,2,3};
+        elementList = majorityElement_229(nums);
+        printIntegerList(elementList);
+    }
+
+
+
+    /**********#119
+     * Given an integer rowIndex, return the rowIndexth (0-indexed) row of the Pascal's triangle.
+     * In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
+     *
+     * Example 1:
+     * Input: rowIndex = 3
+     * Output: [1,3,3,1]
+
+     * Example 2:
+     * Input: rowIndex = 0
+     * Output: [1]
+
+     * Example 3:
+     * Input: rowIndex = 1
+     * Output: [1,1]
+     * Constraints: 0 <= rowIndex <= 33
+     * Follow up: Could you optimize your algorithm to use only O(rowIndex) extra space?
+     */
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> retValList = new ArrayList<Integer>(rowIndex + 1);
+        retValList.add(1);
+        Integer lastValue = 1;
+        for(int index = 1; index < (rowIndex+1); index++){
+	            /*int data = lastValue * (rowIndex - index + 1) / index;
+	            retValList.add(data);*/
+            BigInteger value = BigInteger.valueOf(lastValue).multiply(BigInteger.valueOf(rowIndex - index + 1)).divide(BigInteger.valueOf(index));
+
+            Integer data = value.intValue();
+            retValList.add(data);
+            lastValue = data;
+        }
+        return retValList;
+    }
+
+    public void  test_getRow_119(){
+        int n = 3;
+        List<Integer>retValList = getRow(n);
+        printIntegerList(retValList);
+
+    }
+
+    /***** 118
+     * Given an integer numRows, return the first numRows of Pascal's triangle.
+     * In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
+     *
+     * Example 1:
+     * Input: numRows = 5
+     * Output: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+
+     * Example 2:
+     * Input: numRows = 1
+     * Output: [[1]]
+     *
+     * Constraints: 1 <= numRows <= 30
+     */
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>>retValList = new ArrayList<List<Integer>>(numRows);
+        List<Integer> coEffListForOne = new ArrayList<Integer>();
+        int index = 2;
+
+        coEffListForOne.add(1);
+        retValList.add(coEffListForOne);
+        if(numRows > 1){
+            while(index <= numRows){
+                List<Integer> coEffList = new ArrayList<Integer>(index);
+                coEffList.add(1);
+                if(index > 2) {
+                    List<Integer> prevCoEffList = retValList.get(index -2);
+                    for (int i = 1; i < index - 1; i++) {
+                        int data = prevCoEffList.get(i - 1) + prevCoEffList.get(i);
+                        coEffList.add(data);
+                    }
+                }
+                coEffList.add(1);
+                retValList.add(coEffList);
+                index++;
+            }
+        }
+        return retValList;
+    }
+
+    public void  test_generate_118(){
+        int n = 30;
+        List<List<Integer>>retValList = generate(n);
+        retValList.forEach(x -> printIntegerList(x));
+
+    }
+
+    /**********  844
+     *Given two strings s and t, return true if they are equal when both are typed into empty text editors. '#' means a backspace character. Note that after backspacing an empty text, the text will continue empty.
+     *
+     * Example 1:
+     * Input: s = "ab#c", t = "ad#c"
+     * Output: true
+     * Explanation: Both s and t become "ac".
+     *
+     * Example 2:
+     * Input: s = "ab##", t = "c#d#"
+     * Output: true
+     * Explanation: Both s and t become "".
+     *
+     * Example 3:
+     * Input: s = "a#c", t = "b"
+     * Output: false
+     * Explanation: s becomes "c" while t becomes "b".
+     *
+     * Constraints:
+     * 1 <= s.length, t.length <= 200
+     * s and t only contain lowercase letters and '#' characters.
+     *
+     * Follow up: Can you solve it in O(n) time and O(1) space?
+     */
+    public boolean backspaceCompare(String s, String t) {
+        Stack<Character>sStack = new Stack<>();
+        Stack<Character>tStack = new Stack<>();
+        int len = (s.length() > t.length()) ? s.length() : t.length();
+        for(int idx = 0; idx < len; idx++){
+            //For S
+            if(idx < s.length()){
+                Character sChar = s.charAt(idx);
+                if(sChar == '#'){
+                    if(!sStack.isEmpty())
+                        sStack.pop();
+                }
+                else{
+                    sStack.push(sChar);
+                }
+            }
+            //For T
+            if(idx < t.length()){
+                Character tChar = t.charAt(idx);
+                if(tChar == '#'){
+                    if(!tStack.isEmpty())
+                        tStack.pop();
+                }
+                else{
+                    tStack.push(tChar);
+                }
+            }
+        }
+        String updateS ="";
+        String updateT = "";
+        while(!sStack.isEmpty()){
+            updateS += sStack.pop();
+        }
+        while(!tStack.isEmpty()){
+            updateT += tStack.pop();
+        }
+        return updateS.equals(updateT);
+    }
+
+    public void  test_backspaceCompare_844(){
+        String a = null;
+        String b = null;
+
+        a= "y#fo##f";
+        b = "y#f#o##f";
+        System.out.println("Expect : True, Actual :" + backspaceCompare(a,b));
+
+        a="abc#de#f#ghi#jklmn#op#";
+        b = "abdghjklmo";
+        System.out.println("Expect : True, Actual :" + backspaceCompare(a,b));
+
+        a= "ab##";
+        b = "c#d#";
+        System.out.println("Expect : True, Actual :" + backspaceCompare(a,b));
+
+        a= "a#c";
+        b = "d";
+        System.out.println("Expect : False, Actual :" + backspaceCompare(a,b));
     }
 
 }

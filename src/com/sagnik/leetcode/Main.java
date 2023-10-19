@@ -34,10 +34,17 @@ public class Main {
         //problem.testLetterCombinations();
         //problem.testArrayMerge();
         //problem.test_majorityElement();
-        System.out.println("Enter a number between 1 to 8:");
+        /*System.out.println("Enter a number between 1 to 8:");
         Scanner sc = new Scanner(System.in);
         int x = sc.nextInt();
-        problem.test_generateParenthesis(x);
+        problem.test_generateParenthesis(x);*/
+
+        //problem.test_winnerOfGame();
+        //problem.test_numIdenticalPairs();
+        //problem.test_majorityElement_229();
+        //problem.test_getRow_119();
+        //problem.test_generate_118();
+        problem.test_backspaceCompare_844();
 
     }
 }
