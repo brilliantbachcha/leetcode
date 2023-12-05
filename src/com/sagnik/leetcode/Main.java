@@ -44,7 +44,9 @@ public class Main {
         //problem.test_majorityElement_229();
         //problem.test_getRow_119();
         //problem.test_generate_118();
-        problem.test_backspaceCompare_844();
+        //problem.test_backspaceCompare_844();
+        //problem.test_getSumAbsoluteDifferences_1685();
+        problem.test_jump_45();
 
     }
 }

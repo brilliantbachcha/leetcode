@@ -21,6 +21,20 @@ public class Problem {
         System.out.println();
     }
 
+    private void printIntegerArray(int []elemList){
+        int count = 0;
+        for (int i : elemList){
+            if(count < elemList.length-1)
+                System.out.print(i + ", ");
+            else
+                System.out.print(i);
+
+            count++;
+        }
+        System.out.println();
+    }
+
+
     /*Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.*/
     public boolean braceOrder(String s)
     {
@@ -1788,5 +1802,235 @@ Follow up: Could you solve the problem in linear time and in O(1) space?
         b = "d";
         System.out.println("Expect : False, Actual :" + backspaceCompare(a,b));
     }
+
+    /*
+    There are 3n piles of coins of varying size, you and your friends will take piles of coins as follows:
+In each step, you will choose any 3 piles of coins (not necessarily consecutive).
+Of your choice, Alice will pick the pile with the maximum number of coins.
+You will pick the next pile with the maximum number of coins.
+Your friend Bob will pick the last pile.
+Repeat until there are no more piles of coins.
+Given an array of integers piles where piles[i] is the number of coins in the ith pile.
+
+Return the maximum number of coins that you can have.
+
+Example 1:
+Input: piles = [2,4,1,2,7,8]
+Output: 9
+Explanation: Choose the triplet (2, 7, 8), Alice Pick the pile with 8 coins, you the pile with 7 coins and Bob the last one.
+Choose the triplet (1, 2, 4), Alice Pick the pile with 4 coins, you the pile with 2 coins and Bob the last one.
+The maximum number of coins which you can have are: 7 + 2 = 9.
+On the other hand if we choose this arrangement (1, 2, 8), (2, 4, 7) you only get 2 + 4 = 6 coins which is not optimal.
+
+Example 2:
+Input: piles = [2,4,5]
+Output: 4
+
+Example 3:
+Input: piles = [9,8,7,6,5,1,2,3,4]
+Output: 18
+
+Constraints:
+3 <= piles.length <= 105
+piles.length % 3 == 0
+1 <= piles[i] <= 104
+     */
+    public int maxCoins(int[] piles) {
+
+        int startIndex = 0;
+        int endIndex = piles.length;
+        int totSum = 0;
+        Arrays.sort(piles);
+
+        while(startIndex < endIndex){
+            totSum += piles[endIndex -2];
+            startIndex++;
+            endIndex -= 2;
+        }
+        return totSum;
+    }
+
+    /* #1685
+    You are given an integer array nums sorted in non-decreasing order.
+Build and return an integer array result with the same length as nums such that result[i] is equal to the summation of absolute differences between nums[i] and all the other elements in the array.
+In other words, result[i] is equal to sum(|nums[i]-nums[j]|) where 0 <= j < nums.length and j != i (0-indexed).
+
+Example 1:
+Input: nums = [2,3,5]
+Output: [4,3,5]
+Explanation: Assuming the arrays are 0-indexed, then
+result[0] = |2-2| + |2-3| + |2-5| = 0 + 1 + 3 = 4,
+result[1] = |3-2| + |3-3| + |3-5| = 1 + 0 + 2 = 3,
+result[2] = |5-2| + |5-3| + |5-5| = 3 + 2 + 0 = 5.
+
+Example 2:
+Input: nums = [1,4,6,8,10]
+Output: [24,15,13,15,21]
+
+Constraints:
+2 <= nums.length <= 105
+1 <= nums[i] <= nums[i + 1] <= 104
+     */
+    public int[] getSumAbsoluteDifferences(int[] nums) {
+        int sum[] = new int[nums.length];
+        for(int index = 0; index <= nums.length-1; index++){
+            int curSum = 0;
+
+            for(int sumIndex =0; (sumIndex <= nums.length-1) ; sumIndex++){
+                if(sumIndex > index){
+                    curSum+= nums[sumIndex] - nums[index];
+                }
+                else {
+                    curSum += nums[index] - nums[sumIndex];
+                }
+            }
+            sum[index] = curSum;
+            while(index != nums.length-1 && nums[index] == nums[index + 1]){
+                sum[++index] = curSum;
+            }
+        }
+        return  sum;
+    }
+
+    public int[] getSumAbsoluteDifferences_Alternate(int[] nums){
+        int sum = 0;
+        for (int n : nums) {
+            sum += n;
+        }
+        int left = 0;
+        int right = sum;
+
+        int[] r = new int[nums.length];
+
+        for (int i = 0; i < nums.length; i++) {
+            int n = nums[i];
+            right -= n;
+
+            r[i] = n * i - left + right - n * (nums.length - i - 1);
+
+            left += n;
+        }
+
+        return r;
+    }
+
+    public void test_getSumAbsoluteDifferences_1685(){
+        int nums[];
+        nums = new int[]{2,3,5};
+        int result[];
+        result = getSumAbsoluteDifferences(nums);
+        System.out.println("Expected: 4,3,5. Actual: ");
+        printIntegerArray(result);
+
+        nums = new int[]{1,4,6,8,10};
+        result = getSumAbsoluteDifferences(nums);
+        System.out.println("Expected: 24,15,13,15,21. Actual: ");
+        printIntegerArray(result);
+    }
+/*
+You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at nums[i], you can jump to any nums[i + j] where:
+0 <= j <= nums[i] and
+i + j < n
+Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
+
+Example 1:
+Input: nums = [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+Example 2:
+Input: nums = [2,3,0,1,4]
+Output: 2
+
+Constraints:
+1 <= nums.length <= 104
+0 <= nums[i] <= 1000
+It's guaranteed that you can reach nums[n - 1].
+ */
+    public int jump(int[] nums) {
+        int distance = nums.length;
+        int jumpCounter =0;
+        int index = 0;
+
+        if(nums.length < 2) return 0;
+        if(nums.length == 2) return 1;
+
+        while(index < nums.length){
+            int curMaxJumpVal = nums[index];
+            int maxJumpVal = -1;
+            for(int innerIndex = 1; innerIndex <= curMaxJumpVal; innerIndex++){
+                if(index + innerIndex < nums.length) {
+                    if (nums[index + innerIndex] >= distance) {
+                        ++jumpCounter;
+                        index = nums.length;
+                        break;
+                    } else {
+                        if (nums[index + innerIndex] > maxJumpVal) {
+                            maxJumpVal = nums[index + innerIndex];
+                        }
+                    }
+                }
+                if(index != nums.length){
+                    ++jumpCounter;
+                    index += maxJumpVal;
+                    distance -= index;
+                }
+            }
+        }
+        return jumpCounter;
+    }
+
+    public void test_jump_45(){
+        int nums[];
+
+        nums = new int[]{1,2,3};
+        System.out.println("Expected output: 2, Actual :"+ jump(nums));
+
+        nums = new int[]{2,3,0,1,4};
+        System.out.println("Expected output: 2, Actual :"+ jump(nums));
+    }
+
+    /*
+    #1688
+    You are given an integer n, the number of teams in a tournament that has strange rules:
+
+If the current number of teams is even, each team gets paired with another team. A total of n / 2 matches are played, and n / 2 teams advance to the next round.
+If the current number of teams is odd, one team randomly advances in the tournament, and the rest gets paired. A total of (n - 1) / 2 matches are played, and (n - 1) / 2 + 1 teams advance to the next round.
+Return the number of matches played in the tournament until a winner is decided.
+
+Example 1:
+Input: n = 7
+Output: 6
+Explanation: Details of the tournament:
+- 1st Round: Teams = 7, Matches = 3, and 4 teams advance.
+- 2nd Round: Teams = 4, Matches = 2, and 2 teams advance.
+- 3rd Round: Teams = 2, Matches = 1, and 1 team is declared the winner.
+Total number of matches = 3 + 2 + 1 = 6.
+
+Example 2:
+Input: n = 14
+Output: 13
+Explanation: Details of the tournament:
+- 1st Round: Teams = 14, Matches = 7, and 7 teams advance.
+- 2nd Round: Teams = 7, Matches = 3, and 4 teams advance.
+- 3rd Round: Teams = 4, Matches = 2, and 2 teams advance.
+- 4th Round: Teams = 2, Matches = 1, and 1 team is declared the winner.
+Total number of matches = 7 + 3 + 2 + 1 = 13.
+
+Constraints:
+
+1 <= n <= 200
+     */
+    public int numberOfMatches(int n) {
+        int matchCount = 0;
+
+        while(n > 1){
+            matchCount += n /2;
+            n = (n+1)/ 2;
+        }
+        return matchCount;
+    }
+
 
 }
