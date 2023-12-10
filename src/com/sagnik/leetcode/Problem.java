@@ -2032,5 +2032,143 @@ Constraints:
         return matchCount;
     }
 
+    /*
+    #1716. Calculate Money in Leetcode Bank
+    Hercy wants to save money for his first car. He puts money in the Leetcode bank every day.
+
+He starts by putting in $1 on Monday, the first day. Every day from Tuesday to Sunday, he will put in $1 more than the day before. On every subsequent Monday, he will put in $1 more than the previous Monday.
+Given n, return the total amount of money he will have in the Leetcode bank at the end of the nth day.
+
+
+
+Example 1:
+
+Input: n = 4
+Output: 10
+Explanation: After the 4th day, the total is 1 + 2 + 3 + 4 = 10.
+Example 2:
+
+Input: n = 10
+Output: 37
+Explanation: After the 10th day, the total is (1 + 2 + 3 + 4 + 5 + 6 + 7) + (2 + 3 + 4) = 37. Notice that on the 2nd Monday, Hercy only puts in $2.
+Example 3:
+
+Input: n = 20
+Output: 96
+Explanation: After the 20th day, the total is (1 + 2 + 3 + 4 + 5 + 6 + 7) + (2 + 3 + 4 + 5 + 6 + 7 + 8) + (3 + 4 + 5 + 6 + 7 + 8) = 96.
+     */
+
+    public int totalMoney(int n) {
+
+        int noOfweek = (n / 7);
+        int restOfDays = (n % 7);
+        int totalWeeklyMinSaving = 28; // n * (n+ 1) / 2
+
+        int totMoney = 7 * (noOfweek * (noOfweek - 1) /2)    //Extra weekly saving for week 2 onwards
+                              + noOfweek * totalWeeklyMinSaving  //total weekly savings in if starts from 1
+                              + noOfweek * restOfDays                   // Extra saving for part of week days
+                              + (restOfDays * (restOfDays + 1) / 2); // Total saving for part of week days if starts from 1
+
+        return totMoney;
+    }
+
+    /*
+    #1903. Largest Odd Number in String
+    You are given a string num, representing a large integer. Return the largest-valued odd integer (as a string) that is a non-empty substring of num, or an empty string "" if no odd integer exists.
+A substring is a contiguous sequence of characters within a string.
+Example 1:
+Input: num = "52"
+Output: "5"
+Explanation: The only non-empty substrings are "5", "2", and "52". "5" is the only odd number.
+
+Example 2:
+Input: num = "4206"
+Output: ""
+Explanation: There are no odd numbers in "4206".
+
+Example 3:
+Input: num = "35427"
+Output: "35427"
+Explanation: "35427" is already an odd number.
+
+Constraints:
+1 <= num.length <= 105
+num only consists of digits and does not contain any leading zeros.
+     */
+
+    public String largestOddNumber(String num) {
+        int itrIndex = num.length() -1;
+        int subStrIndex = -1;
+
+        while(itrIndex >= 0){
+            if(isOdd(num.charAt(itrIndex))){
+                subStrIndex = itrIndex + 1;
+                break;
+            }
+            itrIndex--;
+        }
+
+        return  (subStrIndex == -1) ? "" : num.substring(0,subStrIndex);
+
+    }
+     private boolean isOdd(Character s){
+        boolean retVal = false;
+        try {
+            Integer i = Integer.parseInt(s+"");
+            if(i%2 != 0)
+                retVal = true;
+        }
+        catch(Exception e){
+            retVal = false;
+        }
+        return retVal;
+     }
+
+     public void test_largestOddNumber_1903(){
+        String s1 = "52";
+         String s2 = "4206";
+         String s3 = "35427";
+
+         System.out.println("Number: "+ s1+ " Expected: 5 Actual: "+ largestOddNumber(s1));
+         System.out.println("Number: "+ s2+ " Expected:  Actual: "+ largestOddNumber(s2));
+         System.out.println("Number: "+ s3+ " Expected: 35427 Actual: "+ largestOddNumber(s3));
+
+
+     }
+
+     /*
+     #867. Transpose Matrix
+     Given a 2D integer array matrix, return the transpose of matrix.
+    The transpose of a matrix is the matrix flipped over its main diagonal, switching the matrix's row and column indices.
+Example 1:
+Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [[1,4,7],[2,5,8],[3,6,9]]
+
+Example 2:
+Input: matrix = [[1,2,3],[4,5,6]]
+Output: [[1,4],[2,5],[3,6]]
+
+Constraints:
+m == matrix.length
+n == matrix[i].length
+1 <= m, n <= 1000
+1 <= m * n <= 105
+-109 <= matrix[i][j] <= 109
+      */
+    public int[][] transpose(int[][] matrix) {
+        int column = matrix[0].length;
+        int row = matrix.length;
+
+        int [][] newMatrix = new int[column][row];
+
+        for(int i = 0; i< row; i++){
+            for(int j = 0; j <column; j++){
+                newMatrix[j][i] = matrix[i][j];
+            }
+        }
+        return newMatrix;
+    }
+
+
 
 }
