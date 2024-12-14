@@ -47,7 +47,14 @@ public class Main {
         //problem.test_backspaceCompare_844();
         //problem.test_getSumAbsoluteDifferences_1685();
         //problem.test_jump_45();
-        problem.test_largestOddNumber_1903();
+        //problem.test_largestOddNumber_1903();
+        //problem.test_firstPalindrome_2108();
+        //problem.test_minRemoveToMakeValid_1249();
+        //problem.test_checkValidString_678();
+        //problem.test_timeRequiredToBuy_2073();
+        //problem.test_deckRevealedIncreasing_950();
+        //problem.sumDivisible_1590();
+        problem.test_findScore_2593();
 
 
 

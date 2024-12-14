@@ -2,6 +2,7 @@ package com.sagnik.leetcode;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -2169,6 +2170,720 @@ n == matrix[i].length
         return newMatrix;
     }
 
+    /*
+    #242. Valid Anagram
+    Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+Example 1:
+Input: s = "anagram", t = "nagaram"
+Output: true
+
+Example 2:
+Input: s = "rat", t = "car"
+Output: false
+
+Constraints:
+1 <= s.length, t.length <= 5 * 104
+s and t consist of lowercase English letters.
+     */
+    public boolean isAnagram(String s, String t) {
+        s = sortedString(s);
+        t = sortedString(t);
+        return t.equals(s);
+    }
+
+    private String sortedString(String s){
+        char[] sCharArr = s.toCharArray();
+        Arrays.sort(sCharArr);
+        return new String(sCharArr);
+    }
+
+    /*
+    2108. Find First Palindromic String in the Array
+    Given an array of strings words, return the first palindromic string in the array. If there is no such string, return an empty string "".
+A string is palindromic if it reads the same forward and backward.
+Example 1:
+Input: words = ["abc","car","ada","racecar","cool"]
+Output: "ada"
+Explanation: The first string that is palindromic is "ada".
+Note that "racecar" is also palindromic, but it is not the first.
+
+Example 2:
+Input: words = ["notapalindrome","racecar"]
+Output: "racecar"
+Explanation: The first and only string that is palindromic is "racecar".
+
+Example 3:
+Input: words = ["def","ghi"]
+Output: ""
+Explanation: There are no palindromic strings, so the empty string is returned.
+
+Constraints:
+1 <= words.length <= 100
+1 <= words[i].length <= 100
+words[i] consists only of lowercase English letters.
+     */
+    public String firstPalindrome(String[] words) {
+
+        //Optional<String> retValOptional = Arrays.stream(words).filter(s -> isPalindrome(s, 0, s.length()-1)).findFirst();
+        //return (retValOptional.isEmpty() ? "": retValOptional.get());
+        String retVal = null;
+        for (String str: words) {
+            boolean checkPali = isPalindrome(str, 0, str.length()-1);
+            if(checkPali){
+                retVal = str;
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    boolean isPalindrome(String s,int startIndex, int endIndex){
+        boolean retVal = false;
+        if(s.length() == 1)
+            retVal = true;
+        while(startIndex < endIndex){
+            if(s.charAt(startIndex) == s.charAt(endIndex)){
+                retVal =  isPalindrome(s, ++startIndex, --endIndex);
+            }
+        }
+        return retVal;
+    }
+
+    public void test_firstPalindrome_2108(){
+        String[] arrStr = new String[] {"abc","car","ada","racecar","cool"};
+        System.out.println("First Palindromic String: " + firstPalindrome(arrStr));
+    }
 
 
+    /*
+    Given a positive integer n, find the pivot integer x such that:
+The sum of all elements between 1 and x inclusively equals the sum of all elements between x and n inclusively.
+Return the pivot integer x. If no such integer exists, return -1. It is guaranteed that there will be at most one pivot index for the given input.
+
+Example 1:
+Input: n = 8
+Output: 6
+Explanation: 6 is the pivot integer since: 1 + 2 + 3 + 4 + 5 + 6 = 6 + 7 + 8 = 21.
+
+Example 2:
+Input: n = 1
+Output: 1
+Explanation: 1 is the pivot integer since: 1 = 1.
+
+Example 3:
+Input: n = 4
+Output: -1
+Explanation: It can be proved that no such integer exist.
+
+Constraints:
+1 <= n <= 1000
+     */
+    public int pivotInteger(int n) {
+        return 0;
+    }
+
+    /*
+    #1249. Minimum Remove to Make Valid Parentheses
+    Given a string s of '(' , ')' and lowercase English characters.
+    Your task is to remove the minimum number of parentheses ( '(' or ')', in any positions ) so that the resulting parentheses string is valid and return any valid string.
+    Formally, a parentheses string is valid if and only if:
+    It is the empty string, contains only lowercase characters, or
+    It can be written as AB (A concatenated with B), where A and B are valid strings, or
+    It can be written as (A), where A is a valid string.
+
+    Example 1:
+    Input: s = "lee(t(c)o)de)"
+    Output: "lee(t(c)o)de"
+    Explanation: "lee(t(co)de)" , "lee(t(c)ode)" would also be accepted.
+
+    Example 2:
+    Input: s = "a)b(c)d"
+    Output: "ab(c)d"
+
+    Example 3:
+    Input: s = "))(("
+    Output: ""
+    Explanation: An empty string is also valid.
+
+    Constraints:
+
+    1 <= s.length <= 105
+    s[i] is either'(' , ')', or lowercase English letter.
+     */
+    public String minRemoveToMakeValid(String s) {
+
+        StringBuilder retStringBuilder = new StringBuilder();
+        Stack<Character>bracketStack = new Stack<>();
+        char[] charArray = s.toCharArray();
+
+        for(char c : charArray){
+            if(c == '('){
+                retStringBuilder.append(c+"");
+                bracketStack.push(c);
+            }
+            else if (c == ')') {
+                if(!bracketStack.isEmpty()) {
+                    bracketStack.pop();
+                    retStringBuilder.append(c+"");
+                }
+            }
+            else{
+                retStringBuilder.append(c+"");
+            }
+        }
+        if(!bracketStack.isEmpty()){
+
+            while(!bracketStack.isEmpty()){
+                char x = bracketStack.pop();
+                retStringBuilder.deleteCharAt(retStringBuilder.lastIndexOf(x+""));
+            }
+
+        }
+
+        return retStringBuilder.toString();
+    }
+
+    void test_minRemoveToMakeValid_1249(){
+        String s = "lee(t(c)o)de)";
+        System.out.println("Input String: "+ s);
+        System.out.println("Output String : "+ minRemoveToMakeValid(s));
+
+        s = "a)b(c)d";
+        System.out.println("Input String: "+ s);
+        System.out.println("Output String : "+ minRemoveToMakeValid(s));
+
+        s = "))((";
+        System.out.println("Input String: "+ s);
+        System.out.println("Output String : "+ minRemoveToMakeValid(s));
+    }
+
+    /*
+    678. Valid Parenthesis String
+    Given a string s containing only three types of characters: '(', ')' and '*', return true if s is valid.
+    The following rules define a valid string:
+    -Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+    -Any right parenthesis ')' must have a corresponding left parenthesis '('.
+    -Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+    -'*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string "".
+
+
+    Example 1:
+    Input: s = "()"
+    Output: true
+
+    Example 2:
+    Input: s = "(*)"
+    Output: true
+
+    Example 3:
+    Input: s = "(*))"
+    Output: true
+
+    Constraints:
+    1 <= s.length <= 100
+    s[i] is '(', ')' or '*'.
+     */
+    public boolean checkValidString(String s) {
+        boolean retVal = false;
+        Stack<Character>bracketStack = new Stack<>();
+        char[] charArray = s.toCharArray();
+        int starCount = 0;
+        int iterationCount = 0;
+        for(char c : charArray){
+            if(c == '('){
+                bracketStack.push(c);
+            }
+            else if (c == ')') {
+                if(!bracketStack.isEmpty()) {
+                    bracketStack.pop();
+                }
+                else if(starCount ==0){
+                    break;
+                }
+                else
+                    starCount--;
+            }
+            else if (c == '*') {
+                starCount++;
+            }
+            iterationCount++;
+        }
+        if(iterationCount != charArray.length){
+            retVal = false;
+        }
+        else{
+            if(bracketStack.isEmpty()){
+                retVal = true;
+            }
+            else if(bracketStack.size() <= starCount){
+                retVal = true;
+            }
+        }
+
+        return retVal;
+
+    }
+    void test_checkValidString_678(){
+        String s = null;
+
+        s = "(((((*(()((((*((**(((()()*)()()()*((((**)())*)*)))))))(())(()))())((*()()(((()((()*(())*(()**)()(())";  //Not Working
+        System.out.println("Input String: "+ s);
+        System.out.println("Expected: false, Received : "+ checkValidString(s));
+
+        /*
+        s = "(((((()*)(*)*))())())(()())())))((**)))))(()())()";
+        System.out.println("Input String: "+ s);
+        System.out.println("Input String: "+ s);
+        System.out.println("Expected: false, Received : "+ checkValidString(s));
+
+
+
+        s = "(*)";
+        System.out.println("Input String: "+ s);
+        System.out.println("Expected: true, Received : "+ checkValidString(s));
+
+        s = ")(";
+        System.out.println("Input String: "+ s);
+        System.out.println("Expected: false, Received : "+ checkValidString(s));
+
+        s = "(*))";
+        System.out.println("Input String: "+ s);
+        System.out.println("Expected: true, Received : "+ checkValidString(s));
+        */
+    }
+
+
+    /*
+    #2073. Time Needed to Buy Tickets
+
+There are n people in a line queuing to buy tickets, where the 0th person is at the front of the line and the (n - 1)th person is at the back of the line.
+You are given a 0-indexed integer array tickets of length n where the number of tickets that the ith person would like to buy is tickets[i].
+Each person takes exactly 1 second to buy a ticket. A person can only buy 1 ticket at a time and has to go back to the end of the line (which happens instantaneously) in order to buy more tickets. If a person does not have any tickets left to buy, the person will leave the line.
+Return the time taken for the person at position k (0-indexed) to finish buying tickets.
+
+Example 1:
+Input: tickets = [2,3,2], k = 2
+Output: 6
+Explanation:
+- In the first pass, everyone in the line buys a ticket and the line becomes [1, 2, 1].
+- In the second pass, everyone in the line buys a ticket and the line becomes [0, 1, 0].
+The person at position 2 has successfully bought 2 tickets and it took 3 + 3 = 6 seconds.
+
+Example 2:
+Input: tickets = [5,1,1,1], k = 0
+Output: 8
+Explanation:
+- In the first pass, everyone in the line buys a ticket and the line becomes [4, 0, 0, 0].
+- In the next 4 passes, only the person in position 0 is buying tickets.
+The person at position 0 has successfully bought 5 tickets and it took 4 + 1 + 1 + 1 + 1 = 8 seconds.
+
+Constraints:
+n == tickets.length
+1 <= n <= 100
+1 <= tickets[i] <= 100
+0 <= k < n
+     */
+    public int timeRequiredToBuy(int[] tickets, int k) {
+
+        int totalTimeTaken = 0;
+
+        if(tickets.length < 1)
+            return totalTimeTaken;
+        else if(tickets.length == 1 && k ==0)
+            return tickets[0];
+
+        while(tickets[k] > 0) {
+            for (int i = 0; i < tickets.length; i++) {
+                int item = tickets[i];
+                if (item > 0) {
+                    tickets[i] = --item;
+                    totalTimeTaken++;
+                    if(tickets[k] == 0)
+                        break;
+                }
+            }
+        }
+        return totalTimeTaken;
+    }
+
+    void test_timeRequiredToBuy_2073(){
+        int [] tickets1 = new int[] {84,49,5,24,70,77,87,8};
+        System.out.println("Scenario 1: Expected 154, Received: "+ timeRequiredToBuy(tickets1,3));
+        /*
+        int [] tickets2 = new int[] {5,1,1,1};
+        System.out.println("Scenario 2: Expected 8, Received: "+ timeRequiredToBuy(tickets2,0));
+
+         */
+    }
+
+    /*
+    #950. Reveal Cards In Increasing Order
+    You are given an integer array deck. There is a deck of cards where every card has a unique integer. The integer on the ith card is deck[i].
+   You can order the deck in any order you want. Initially, all the cards start face down (unrevealed) in one deck.
+   You will do the following steps repeatedly until all cards are revealed:
+     1.Take the top card of the deck, reveal it, and take it out of the deck.
+     2.If there are still cards in the deck then put the next top card of the deck at the bottom of the deck.
+     3.If there are still unrevealed cards, go back to step 1. Otherwise, stop.
+     4.Return an ordering of the deck that would reveal the cards in increasing order.
+
+Note that the first entry in the answer is considered to be the top of the deck.
+
+Example 1:
+Input: deck = [17,13,11,2,3,5,7]
+Output: [2,13,3,11,5,17,7]
+Explanation:
+We get the deck in the order [17,13,11,2,3,5,7] (this order does not matter), and reorder it.
+After reordering, the deck starts as [2,13,3,11,5,17,7], where 2 is the top of the deck.
+We reveal 2, and move 13 to the bottom.  The deck is now [3,11,5,17,7,13].
+We reveal 3, and move 11 to the bottom.  The deck is now [5,17,7,13,11].
+We reveal 5, and move 17 to the bottom.  The deck is now [7,13,11,17].
+We reveal 7, and move 13 to the bottom.  The deck is now [11,17,13].
+We reveal 11, and move 17 to the bottom.  The deck is now [13,17].
+We reveal 13, and move 17 to the bottom.  The deck is now [17].
+We reveal 17.
+Since all the cards revealed are in increasing order, the answer is correct.
+
+Example 2:
+Input: deck = [1,1000]
+Output: [1,1000]
+
+Constraints:
+1 <= deck.length <= 1000
+1 <= deck[i] <= 106
+All the values of deck are unique.
+
+     */
+    public int[] deckRevealedIncreasing(int[] deck) {
+
+        int[] retDeck = new int[deck.length];
+        class Node{
+            Node prev;
+            Integer data;
+            Node next;
+
+            public Node(){
+                prev = null;
+                data= null;
+                next = null;
+            }
+            public Node(Integer n){
+                prev = null;
+                data= n;
+                next = null;
+            }
+        }
+
+        class DLinkList{
+            Node start = null;
+            Node end = null;
+
+            public void printInOrder(){
+
+                if(start != null){
+                    System.out.print("Print in order: ");
+                    Node n = start;
+                    while(n != null){
+                        System.out.print(""+ n.data + ", ");
+                        n = n.next;
+                    }
+                    System.out.println();
+                }
+            }
+
+            public void printInReverseOrder(){
+                if(end != null){
+                    System.out.print("Print in reverse order: ");
+                    Node n = end;
+                    while(n != null){
+                        System.out.print(""+ n.data+ ", ");
+                        n = n.prev;
+                    }
+                    System.out.println();
+                }
+            }
+        }
+        DLinkList dLink = null;
+        Integer[] sortedDeck = Arrays.stream(deck).boxed().toArray(Integer[]::new);
+        Arrays.sort(sortedDeck, Collections.reverseOrder());
+        if(deck.length == 1)
+            return deck;
+
+        for(Integer n : sortedDeck){
+            Node node = new Node(n);
+            System.out.println(" New Number : "+ n);
+            if(dLink == null){
+                dLink = new DLinkList();
+                dLink.start = node;
+                dLink.end = node;
+            }
+            else if(dLink.start == dLink.end){
+                node.next = dLink.end;
+                dLink.start = node;
+                dLink.end.prev = node;
+            }
+            else{
+                Node endNode = dLink.end;
+                Node startNode = dLink.start;
+
+                dLink.end = endNode.prev;
+                dLink.end.next = null;
+                if(dLink.end.prev == null){
+                    dLink.end.prev = endNode;
+                }
+
+                node.next = endNode;
+                endNode.prev = node;
+                endNode.next = startNode;
+                startNode.prev = endNode;
+                dLink.start = node;
+            }
+            dLink.printInOrder();
+            dLink.printInReverseOrder();
+        }
+
+        Node traverseNode = dLink.start;
+        int i =0;
+        while (traverseNode != null){
+            retDeck[i++] = traverseNode.data;
+            traverseNode = traverseNode.next;
+
+        }
+
+        return retDeck;
+
+    }
+
+    void test_deckRevealedIncreasing_950(){
+        int nums[] = null;
+
+        nums = new int[]{17,13,11,2,3,5,7};
+        System.out.println("Expected: 2,13,3,11,5,17,7");
+        System.out.print("Received : ");
+        Arrays.stream(deckRevealedIncreasing(nums)).boxed().forEach(System.out::println);
+    }
+
+    /*
+    1971. Find if Path Exists in Graph
+    There is a bi-directional graph with n vertices, where each vertex is labeled from 0 to n - 1 (inclusive). The edges in the graph are represented as a 2D integer array edges, where each edges[i] = [ui, vi] denotes a bi-directional edge between vertex ui and vertex vi. Every vertex pair is connected by at most one edge, and no vertex has an edge to itself.
+    You want to determine if there is a valid path that exists from vertex source to vertex destination.
+    Given edges and the integers n, source, and destination, return true if there is a valid path from source to destination, or false otherwise.
+
+    Example 1:
+    Input: n = 3, edges = [[0,1],[1,2],[2,0]], source = 0, destination = 2
+    Output: true
+    Explanation: There are two paths from vertex 0 to vertex 2:
+    - 0 → 1 → 2
+    - 0 → 2
+
+    Example 2:
+    Input: n = 6, edges = [[0,1],[0,2],[3,5],[5,4],[4,3]], source = 0, destination = 5
+    Output: false
+    Explanation: There is no path from vertex 0 to vertex 5.
+
+    Constraints:
+    1 <= n <= 2 * 105
+    0 <= edges.length <= 2 * 105
+    edges[i].length == 2
+    0 <= ui, vi <= n - 1
+    ui != vi
+    0 <= source, destination <= n - 1
+    There are no duplicate edges.
+    There are no self edges.
+     */
+    public boolean validPath(int n, int[][] edges, int source, int destination) {
+        Map<Integer, List<Integer>>edgeMap = new HashMap<>();
+        return false;
+    }
+
+
+    public void test_validPath_1971()
+    {
+        int [][]edges1 = {{0,1},{1,2},{2,0}};
+        System.out.println("Scenario 1: Expected= true, Received: "+ validPath(3,edges1,0,2));
+
+        int [][]edges2 = {{0,1},{0,2},{3,5},{5,4},{4,3}};
+        System.out.println("Scenario 1: Expected= false, Received: "+ validPath(3,edges2,0,2));
+    }
+
+
+    /*
+    1590. Make Sum Divisible by P
+    Given an array of positive integers nums, remove the smallest subarray (possibly empty) such that the sum of the remaining elements is divisible by p. It is not allowed to remove the whole array.
+    Return the length of the smallest subarray that you need to remove, or -1 if it's impossible.
+    A subarray is defined as a contiguous block of elements in the array.
+
+    Example 1:
+    Input: nums = [3,1,4,2], p = 6
+    Output: 1
+    Explanation: The sum of the elements in nums is 10, which is not divisible by 6. We can remove the subarray [4], and the sum of the remaining elements is 6, which is divisible by 6.
+
+    Example 2:
+    Input: nums = [6,3,5,2], p = 9
+    Output: 2
+    Explanation: We cannot remove a single element to get a sum divisible by 9. The best way is to remove the subarray [5,2], leaving us with [6,3] with sum 9.
+
+    Example 3:
+    Input: nums = [1,2,3], p = 3
+    Output: 0
+    Explanation: Here the sum is 6. which is already divisible by 3. Thus we do not need to remove anything.
+     */
+    public int minSubarray(int[] nums, int p) {
+        int minSize = -1;
+        long remainder = sumArray(nums) % p;
+        if(remainder == 0){
+            //Sum matches
+            return 0;
+        }
+        else{
+            //Check 1 size sub array
+            if(Arrays.stream(nums).anyMatch(n -> n == remainder)){
+                //Remove one element
+                minSize = 1;
+            }
+            else{
+                for(int subSize = 2; subSize < nums.length -1; subSize++){
+                    for(int index =0; index <= nums.length - subSize; index++){
+                        int[] subArr = new int[subSize];
+                        System.arraycopy(nums,index,subArr,0,subSize);
+                        if(sumArray(subArr) == remainder){
+                            //Sub array found
+                            minSize = nums.length - subSize;
+                        }
+                    }
+                }
+            }
+        }
+
+        return minSize;
+    }
+
+    private long sumArray(int[] nums){
+        return Arrays.stream(nums).mapToLong(n-> Long.valueOf(n)).sum();
+    }
+
+    public void sumDivisible_1590(){
+        int[] nums = new int[] {26,19,11,14,18,4,7,1,30,23,19,8,10,6,26,3};
+        System.out.println("Minimun array size :" + minSubarray(nums, 26));
+    }
+
+    /*
+    2593. Find Score of an Array After Marking All Elements
+    You are given an array nums consisting of positive integers.
+
+Starting with score = 0, apply the following algorithm:
+
+Choose the smallest integer of the array that is not marked. If there is a tie, choose the one with the smallest index.
+Add the value of the chosen integer to score.
+Mark the chosen element and its two adjacent elements if they exist.
+Repeat until all the array elements are marked.
+Return the score you get after applying the above algorithm.
+
+Example 1:
+Input: nums = [2,1,3,4,5,2]
+Output: 7
+Explanation: We mark the elements as follows:
+- 1 is the smallest unmarked element, so we mark it and its two adjacent elements: [2,1,3,4,5,2].
+- 2 is the smallest unmarked element, so we mark it and its left adjacent element: [2,1,3,4,5,2].
+- 4 is the only remaining unmarked element, so we mark it: [2,1,3,4,5,2].
+Our score is 1 + 2 + 4 = 7.
+
+Example 2:
+Input: nums = [2,3,5,1,3,2]
+Output: 5
+Explanation: We mark the elements as follows:
+- 1 is the smallest unmarked element, so we mark it and its two adjacent elements: [2,3,5,1,3,2].
+- 2 is the smallest unmarked element, since there are two of them, we choose the left-most one, so we mark the one at index 0 and its right adjacent element: [2,3,5,1,3,2].
+- 2 is the only remaining unmarked element, so we mark it: [2,3,5,1,3,2].
+Our score is 1 + 2 + 2 = 5.
+ Constraints:
+1 <= nums.length <= 105
+1 <= nums[i] <= 106
+     */
+    public long findScore(int[] nums) {
+
+        if(nums.length == 1){
+            return nums[0];
+        }
+        else if(nums.length == 2){
+            return (nums[0] < nums[1]) ? nums[0] : nums[1];
+        }
+        else{
+            long score = 0;
+            Map<Integer, List<Integer>> elementMap = new TreeMap<Integer, List<Integer>>();
+            for(int i=0 ; i < nums.length; i++){
+                if(elementMap.containsKey(nums[i])){
+                    elementMap.get(nums[i]).add(i);
+                }
+                else{
+                    List<Integer>indexList = new ArrayList<Integer>();
+                    indexList.add(i);
+                    elementMap.put(nums[i], indexList);
+                }
+            }
+
+            for(Map.Entry<Integer, List<Integer>> element : elementMap.entrySet()){
+                List<Integer> indexList = element.getValue();
+                for(Integer x : indexList){
+                    if(nums[x] == element.getKey()){
+                        score += nums[x];
+                        nums[x] = -1;
+                        if((x-1) >= 0){
+                            nums[x-1] = -1;
+                        }
+                        if((x+1) < nums.length){
+                            nums[x+1] = -1;
+                        }
+                    }
+                }
+            }
+            return score;
+        }
+    }
+
+    public void test_findScore_2593(){
+        int[] nums = {2,1,3,4,5,2};
+        System.out.println("Scenario 1, Expected: 7, actual :" + findScore(nums));
+        int[] nums1 = {2,3,5,1,3,2};
+        System.out.println("Scenario 2, Expected: 5, actual :" + findScore(nums1));
+        int[] nums2 = {2,23};
+        System.out.println("Scenario 3, Expected: 2, actual :" + findScore(nums2));
+    }
+
+    /*
+    3011. Find if Array Can Be Sorted
+    You are given a 0-indexed array of positive integers nums.
+    In one operation, you can swap any two adjacent elements if they have the same number of
+    set bits
+    . You are allowed to do this operation any number of times (including zero). Return true if you can sort the array, else return false.
+
+    Example 1:
+    Input: nums = [8,4,2,30,15]
+    Output: true
+    Explanation: Let's look at the binary representation of every element. The numbers 2, 4, and 8 have one set bit each with binary representation "10", "100", and "1000" respectively. The numbers 15 and 30 have four set bits each with binary representation "1111" and "11110".
+    We can sort the array using 4 operations:
+    - Swap nums[0] with nums[1]. This operation is valid because 8 and 4 have one set bit each. The array becomes [4,8,2,30,15].
+    - Swap nums[1] with nums[2]. This operation is valid because 8 and 2 have one set bit each. The array becomes [4,2,8,30,15].
+    - Swap nums[0] with nums[1]. This operation is valid because 4 and 2 have one set bit each. The array becomes [2,4,8,30,15].
+    - Swap nums[3] with nums[4]. This operation is valid because 30 and 15 have four set bits each. The array becomes [2,4,8,15,30].
+    The array has become sorted, hence we return true.
+    Note that there may be other sequences of operations which also sort the array.
+
+    Example 2:
+    Input: nums = [1,2,3,4,5]
+    Output: true
+    Explanation: The array is already sorted, hence we return true.
+
+    Example 3:
+    Input: nums = [3,16,8,4,2]
+    Output: false
+    Explanation: It can be shown that it is not possible to sort the input array using any number of operations.
+    Constraints:
+    1 <= nums.length <= 100
+    1 <= nums[i] <= 28
+     */
+    public boolean canSortArray(int[] nums) {
+        //int[] sortedNum = Arrays.
+        return false;
+    }
 }
