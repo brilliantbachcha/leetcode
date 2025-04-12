@@ -1,6 +1,8 @@
 package com.sagnik.leetcode;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -2886,4 +2888,172 @@ Our score is 1 + 2 + 2 = 5.
         //int[] sortedNum = Arrays.
         return false;
     }
+
+    /*
+    1792. Maximum Average Pass Ratio
+    There is a school that has classes of students and each class will be having a final exam. You are given a 2D integer array classes, where classes[i] = [passi, totali]. You know beforehand that in the ith class, there are totali total students, but only passi number of students will pass the exam.
+You are also given an integer extraStudents. There are another extraStudents brilliant students that are guaranteed to pass the exam of any class they are assigned to. You want to assign each of the extraStudents students to a class in a way that maximizes the average pass ratio across all the classes.
+The pass ratio of a class is equal to the number of students of the class that will pass the exam divided by the total number of students of the class. The average pass ratio is the sum of pass ratios of all the classes divided by the number of the classes.
+Return the maximum possible average pass ratio after assigning the extraStudents students. Answers within 10-5 of the actual answer will be accepted.
+
+Example 1:
+Input: classes = [[1,2],[3,5],[2,2]], extraStudents = 2
+Output: 0.78333
+Explanation: You can assign the two extra students to the first class. The average pass ratio will be equal to (3/4 + 3/5 + 2/2) / 3 = 0.78333.
+
+Example 2:
+Input: classes = [[2,4],[3,9],[4,5],[2,10]], extraStudents = 4
+Output: 0.53485
+
+Constraints:
+1 <= classes.length <= 105
+classes[i].length == 2
+1 <= passi <= totali <= 105
+1 <= extraStudents <= 105
+     */
+    public double maxAverageRatio(int[][] classes, int extraStudents) {
+        //Didn't work for large data, use priorityQ instead and class representation of "Classes"
+        double result = 0.0;
+        if(extraStudents < 1){
+            result = calculateAvgPassRatio(classes);
+        }
+        else{
+
+            int count = 1;
+            while(count <= extraStudents){
+                int index = -1;
+                double maxProposedAvgRatioChange = 0.0;
+                double curMaxAvgRatio = 0.0;
+                double avgRatioChange = 0.0;
+                for(int i = 0; i< classes.length; i++){
+                    double curClassAvgRatio = classes[i][0] / ((double) classes[i][1]);
+                    double proposedRatio = (classes[i][0] +1) / ((double) (classes[i][1] + 1));
+                    avgRatioChange = proposedRatio - curClassAvgRatio;
+                    if(avgRatioChange > maxProposedAvgRatioChange){
+                        maxProposedAvgRatioChange = avgRatioChange;
+                        curMaxAvgRatio = curClassAvgRatio;
+                        index = i;
+                    }
+                    else if(avgRatioChange == maxProposedAvgRatioChange){
+                        if(curClassAvgRatio >= curMaxAvgRatio){
+                            maxProposedAvgRatioChange = avgRatioChange;
+                            curMaxAvgRatio = curClassAvgRatio;
+                            index = i;
+                        }
+                    }
+                }
+                if(index != -1){
+                    classes[index][0] += 1;
+                    classes[index][1] += 1;
+                }
+                //System.out.println("Index: "+ index + " avgRatioChange: "+  avgRatioChange);
+                //print2DArray(classes);
+                count++;
+            }
+            result = calculateAvgPassRatio(classes);
+        }
+
+        return result;
+    }
+    private double calculateAvgPassRatio(int[][] classes){
+        double result = 0.0;
+        for(int i = 0; i< classes.length; i++){
+            result += classes[i][0] / ((double) classes[i][1]);
+        }
+        result = (result/(double)classes.length);
+        BigDecimal bd = new BigDecimal(String.valueOf(result));
+        bd = bd.setScale(5, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public void test_maxAverageRatio_1792(){
+        int [][]classes1 = {{1,2},{3,5},{2,2}};
+        System.out.println("Scanerio 1: Expected: 0.78333 Actual: "+ maxAverageRatio(classes1, 2));
+
+        int [][]classes2 = {{2,4},{3,9},{4,5},{2,10}};
+        System.out.println("Scanerio 2: Expected: 0.53485 Actual: "+ maxAverageRatio(classes2, 4));
+    }
+
+    private void print2DArray(int[][]classes){
+        for(int i =0; i< classes.length; i++){
+            for(int j = 0; j <classes[i].length; j++ ){
+                System.out.print(" "+ classes[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    /*
+    2185. Counting Words With a Given Prefix
+    You are given an array of strings words and a string pref. Return the number of strings in words that contain pref as a prefix.
+A prefix of a string s is any leading contiguous substring of s.
+
+Example 1:
+Input: words = ["pay","attention","practice","attend"], pref = "at"
+Output: 2
+Explanation: The 2 strings that contain "at" as a prefix are: "attention" and "attend".
+
+Example 2:
+Input: words = ["leetcode","win","loops","success"], pref = "code"
+Output: 0
+Explanation: There are no strings that contain "code" as a prefix.
+
+Constraints:
+1 <= words.length <= 100
+1 <= words[i].length, pref.length <= 100
+words[i] and pref consist of lowercase English letters.
+
+     */
+    public int prefixCount(String[] words, String pref) {
+        return (int)Arrays.asList(words).stream().filter(x-> x.startsWith(pref)).count();
+    }
+
+    /* 69. Sqrt(x)
+    Given a non-negative integer x, return the square root of x rounded down to the nearest integer. The returned integer should be non-negative as well.
+You must not use any built-in exponent function or operator.
+For example, do not use pow(x, 0.5) in c++ or x ** 0.5 in python.
+Example 1:
+Input: x = 4
+Output: 2
+Explanation: The square root of 4 is 2, so we return 2.
+
+Example 2:
+Input: x = 8
+Output: 2
+Explanation: The square root of 8 is 2.82842..., and since we round it down to the nearest integer, 2 is returned.
+*/
+    public int mySqrt(int x) {
+
+        if(x <2)
+            return x;
+
+        int mid = 0;
+        int low = 1;
+        int high = x -1;
+        while(low <= high){
+            mid = low + ((high - low) /2);
+            Long num = (long) mid * mid;
+            if(num > (long)x){
+                high = mid -1;
+            }
+            else if(num < (long)x){
+                low = mid +1;
+            }
+            else{
+                return mid;
+            }
+            System.out.println("low: "+ low + " mid: "+ mid + " High: "+ high);
+        }
+
+        return high;
+    }
+
+    public void test_69_sqrtx(){
+        int x = 2147483647;
+
+        System.out.println("Expected: 46340, received: "+ mySqrt(2147483647));
+    }
+
+
+
 }

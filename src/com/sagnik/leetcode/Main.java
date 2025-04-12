@@ -54,7 +54,9 @@ public class Main {
         //problem.test_timeRequiredToBuy_2073();
         //problem.test_deckRevealedIncreasing_950();
         //problem.sumDivisible_1590();
-        problem.test_findScore_2593();
+        //problem.test_findScore_2593();
+        //problem.test_maxAverageRatio_1792();
+        problem.test_69_sqrtx();
 
 
 
