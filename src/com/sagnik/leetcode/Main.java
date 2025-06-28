@@ -5,6 +5,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Problem problem = new Problem();
+        Problem50 prob50 = new Problem50();
+        Problem31 prob31 = new Problem31();
+        Problem25 prob25 = new Problem25();
+        Problem21 prob21 = new Problem21();
+        Problem20 prob20 = new Problem20();
         /*String s = "";
         System.out.println("Enter the String ");
         Scanner sc = new Scanner(System.in);*/
@@ -56,9 +61,13 @@ public class Main {
         //problem.sumDivisible_1590();
         //problem.test_findScore_2593();
         //problem.test_maxAverageRatio_1792();
-        problem.test_69_sqrtx();
-
-
+        //problem.test_69_sqrtx();
+        //prob50.test_threeSumClosest_16();
+        //prob31.test_clearStars_3170();
+        //prob25.test_minMaxDifference_2566();
+        //prob21.test_divideString_2138();
+        //prob20.test_kMirror_2081();
+        prob20.test_maxSubsequence_2099();
 
     }
 }

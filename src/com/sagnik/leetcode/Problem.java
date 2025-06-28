@@ -11,31 +11,7 @@ import java.util.stream.Collectors;
 public class Problem {
     private String retStr = "";
 
-    private void printIntegerList(List<Integer> elemList){
-        int count = 0;
-        for (Integer i : elemList){
-            if(count < elemList.size()-1)
-                System.out.print(i + ", ");
-            else
-                System.out.print(i);
 
-            count++;
-        }
-        System.out.println();
-    }
-
-    private void printIntegerArray(int []elemList){
-        int count = 0;
-        for (int i : elemList){
-            if(count < elemList.length-1)
-                System.out.print(i + ", ");
-            else
-                System.out.print(i);
-
-            count++;
-        }
-        System.out.println();
-    }
 
 
     /*Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.*/
@@ -479,187 +455,7 @@ digits does not contain any leading 0's.
         System.out.println();
 
     }
-/*#12
-Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
-Symbol       Value
-I             1
-V             5
-X             10
-L             50
-C             100
-D             500
-M             1000
-For example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
-Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
-I can be placed before V (5) and X (10) to make 4 and 9.
-X can be placed before L (50) and C (100) to make 40 and 90.
-C can be placed before D (500) and M (1000) to make 400 and 900.
-Given an integer, convert it to a roman numeral.
- */
-    public String intToRoman(int num) {
-        String romanNumberStr = "";
-        int  tempNum = num;
-        int power = 0;
-        while(tempNum > 0){
-            if(tempNum >= 1000){
-                romanNumberStr += "M";
-                tempNum = tempNum-1000;
-            }
-            else if(tempNum >=900){
-                romanNumberStr += "CM";
-                tempNum = tempNum-900;
-            }
-            else if (tempNum >= 500) {
-                romanNumberStr += "D";
-                tempNum = tempNum-500;
-            }
-            else if (tempNum >= 400) {
-                romanNumberStr += "CD";
-                tempNum = tempNum-400;
-            }
-            else if (tempNum >= 100) {
-                romanNumberStr += "C";
-                tempNum = tempNum-100;
-            }
-            else if (tempNum >= 90) {
-                romanNumberStr += "XC";
-                tempNum = tempNum-90;
-            }
-            else if (tempNum >= 50) {
-                romanNumberStr += "L";
-                tempNum = tempNum-50;
-            }
-            else if (tempNum >= 40) {
-                romanNumberStr += "XL";
-                tempNum = tempNum-40;
-            }
-            else if (tempNum >= 10) {
-                romanNumberStr += "X";
-                tempNum = tempNum-10;
-            }
-            else if (tempNum == 9) {
-                romanNumberStr += "IX";
-                tempNum = tempNum-9;
-            }
-            else if (tempNum >= 5) {
-                romanNumberStr += "V";
-                tempNum = tempNum-5;
-            }
-            else if (tempNum == 4) {
-                romanNumberStr += "IV";
-                tempNum = 0;
-            }
-            else if (tempNum >= 1) {
-                romanNumberStr += "I";
-                tempNum = tempNum-1;
-            }
-        }
-        return romanNumberStr;
-    }
 
-    /*#
-    Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
-    Symbol       Value
-    I             1
-    V             5
-    X             10
-    L             50
-    C             100
-    D             500
-    M             1000
-    For example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
-    Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
-    I can be placed before V (5) and X (10) to make 4 and 9.
-    X can be placed before L (50) and C (100) to make 40 and 90.
-    C can be placed before D (500) and M (1000) to make 400 and 900.
-    Given an roman numeral., convert it to an integer
-     */
-
-    public int romanToNumber(String str){
-        int number = 0;
-        String romanStr = new String(str);
-        char[] strArr = romanStr.toCharArray();
-        for(int i=0;i < strArr.length; i++){
-            if(strArr[i] == 'M'){
-                number += 1000;
-            }
-            else if(strArr[i] == 'D'){
-                number += 500;
-            }
-            else if(strArr[i] == 'C'){
-                if(i+ 1 < strArr.length){
-                    if(strArr[i+1] == 'M'){
-                        number += 900;
-                        i++;
-                    }
-                    else if(strArr[i+1] == 'D'){
-                        number += 400;
-                        i++;
-                    }
-                    else{
-                        number += 100;
-                    }
-                }
-                else {
-                    number += 100;
-                }
-            }
-            else if(strArr[i] == 'L'){
-                number += 50;
-            }
-            else if(strArr[i] == 'X'){
-                if(i+ 1 < strArr.length){
-                    if(strArr[i+1] == 'C'){
-                        number += 90;
-                        i++;
-                    }
-                    else if(strArr[i+1] == 'L'){
-                        number += 40;
-                        i++;
-                    }
-                    else{
-                        number += 10;
-                    }
-                }
-                else {
-                    number += 10;
-                }
-            }
-            else if(strArr[i] == 'V'){
-                number += 5;
-            }
-            else if(strArr[i] == 'I'){
-                if(i+ 1 < strArr.length){
-                    if(strArr[i+1] == 'X'){
-                        number += 9;
-                        i++;
-                    }
-                    else if(strArr[i+1] == 'V'){
-                        number += 4;
-                        i++;
-                    }
-                    else{
-                        number += 1;
-                    }
-                }
-                else {
-                    number += 1;
-                }
-            }
-        }
-        return number;
-    }
-    public void testIntToRoman() {
-        System.out.println(intToRoman(3));
-        System.out.println(intToRoman(58));
-        System.out.println(intToRoman(1994));
-        System.out.println(intToRoman(3994));
-
-        System.out.println(romanToNumber("III"));
-        System.out.println(romanToNumber("LXXIX"));
-        System.out.println(romanToNumber("MCMXCIV"));
-        System.out.println(romanToNumber("DCCCXLV"));
-    }
 
 /*
 Convert a non-negative integer num to its English words representation.
@@ -783,59 +579,7 @@ private Map<Integer, String> digitToWordMap = new HashMap<Integer, String>(){{
         System.out.println(numberToWords(1000000000));
    }
 
-/*
-#11:
-You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
-Find two lines that together with the x-axis form a container, such that the container contains the most water.
-Return the maximum amount of water a container can store.
-Notice that you may not slant the container.
-Example 1:
-Input: height = [1,8,6,2,5,4,8,3,7]
-Output: 49
-Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
 
-Example 2:
-Input: height = [1,1]
-Output: 1
-
-Constraints:
-n == height.length
-2 <= n <= 105
-0 <= height[i] <= 104
- */
-    public int maxArea(int[] height) {
-        int i = 0;
-        int j = height.length -1;
-        int storedWater = 0;
-        boolean isIncreased = false;
-        if(height.length > 1){
-            while(i < j){
-                int width = j -i;
-                int h = (height[i] > height[j]) ? height[j] : height[i];
-                isIncreased = (height[i] < height[j]);
-                if((width * h) > storedWater){
-                    storedWater = width * h;
-                }
-                if(isIncreased) i++;
-                else j--;
-            }
-        }
-        return storedWater;
-    }
-    public void test_maxArea(){
-        int[] heights = null;
-        heights = new int[] {1,8,6,2,5,4,8,3,7};
-        System.out.println("Expected: 49 Actual: "+ maxArea(heights));
-
-        heights = new int[] {1,1};
-        System.out.println("Expected: 1 Actual: "+ maxArea(heights));
-
-        heights = new int[] {1};
-        System.out.println("Expected: 0 Actual: "+ maxArea(heights));
-
-        heights = new int[] {};
-        System.out.println("Expected: 0 Actual: "+ maxArea(heights));
-    }
 
 /*
 Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
@@ -919,17 +663,13 @@ Notice that the solution set must not contain duplicate triplets.
         System.out.println("Result Count: " + resultList.size());
         /*Print Value*/
         for (List<Integer> intList : resultList) {
-            printList(intList);
+            Utility.printList(intList);
             System.out.print("   ");
         }
         System.out.println();
     }
 
-    private void printList(List<Integer>intList){
-        for (Integer i : intList) {
-            System.out.print(i + " ");
-        }
-    }
+
 
     /* 1770. Maximum Score from Performing Multiplication Operations
         You are given two integer arrays nums and multipliers of size n and m respectively, where n >= m. The arrays are 1-indexed.
@@ -1621,15 +1361,15 @@ Follow up: Could you solve the problem in linear time and in O(1) space?
 
         nums = new int[]{1,3,2,3,1,1,3};
         elementList = majorityElement_229(nums);
-        printIntegerList(elementList);
+        Utility.printIntegerList(elementList);
 
         nums = new int[]{3,2,3};
         elementList = majorityElement_229(nums);
-        printIntegerList(elementList);
+        Utility.printIntegerList(elementList);
 
         nums = new int[]{1,2,3};
         elementList = majorityElement_229(nums);
-        printIntegerList(elementList);
+        Utility.printIntegerList(elementList);
     }
 
 
@@ -1671,7 +1411,7 @@ Follow up: Could you solve the problem in linear time and in O(1) space?
     public void  test_getRow_119(){
         int n = 3;
         List<Integer>retValList = getRow(n);
-        printIntegerList(retValList);
+        Utility.printIntegerList(retValList);
 
     }
 
@@ -1718,7 +1458,7 @@ Follow up: Could you solve the problem in linear time and in O(1) space?
     public void  test_generate_118(){
         int n = 30;
         List<List<Integer>>retValList = generate(n);
-        retValList.forEach(x -> printIntegerList(x));
+        retValList.forEach(x -> Utility.printIntegerList(x));
 
     }
 
@@ -1923,12 +1663,12 @@ Constraints:
         int result[];
         result = getSumAbsoluteDifferences(nums);
         System.out.println("Expected: 4,3,5. Actual: ");
-        printIntegerArray(result);
+        Utility.printIntegerArray(result);
 
         nums = new int[]{1,4,6,8,10};
         result = getSumAbsoluteDifferences(nums);
         System.out.println("Expected: 24,15,13,15,21. Actual: ");
-        printIntegerArray(result);
+        Utility.printIntegerArray(result);
     }
 /*
 You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
