@@ -1,5 +1,7 @@
 package com.sagnik.leetcode;
 
+import java.math.BigInteger;
+
 public class Problem1 {
 
     /*
@@ -19,12 +21,12 @@ a and b consist only of '0' or '1' characters.
 Each string does not contain leading zeros except for the zero itself.
      */
     public String addBinary(String a, String b) {
-        long longA = Long.parseLong(a,2);
-        long longB = Long.parseLong(b,2);
+        BigInteger longA = new BigInteger(a,2);
+        BigInteger longB = new BigInteger(b,2);
 
-        Long sum = longA + longB;
+        BigInteger sum = longA.add(longB);
 
-        return Long.toBinaryString(sum);
+        return sum.toString(2);
     }
 
     public void test_67_addBinary(){
@@ -36,6 +38,10 @@ Each string does not contain leading zeros except for the zero itself.
         a = "1010";
         b = "1011";
         System.out.println("Expected : 10101,  Actual: "+ addBinary(a,b));
+        a = "10100000100100110110010000010101111011011001101110111111111101000000101111001110001111100001101";
+        b = "110101001011101110001111100110001010100001101011101010000011011011001011101111001100000011011110011";
+
+        System.out.println("Expected : 0,  Actual: "+ addBinary(a,b));
 
     }
 
