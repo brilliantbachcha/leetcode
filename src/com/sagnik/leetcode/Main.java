@@ -11,6 +11,7 @@ public class Main {
         Problem21 prob21 = new Problem21();
         Problem20 prob20 = new Problem20();
         Problem34 prob34 = new Problem34();
+        Problem1 prob1 = new Problem1();
         /*String s = "";
         System.out.println("Enter the String ");
         Scanner sc = new Scanner(System.in);*/
@@ -69,7 +70,8 @@ public class Main {
         //prob21.test_divideString_2138();
         //prob20.test_kMirror_2081();
         //prob20.test_maxSubsequence_2099();
-        prob34.test_numOfUnplacedFruits_3477();
+        //prob34.test_numOfUnplacedFruits_3477();
+        prob1.test_67_addBinary();
 
     }
 }
